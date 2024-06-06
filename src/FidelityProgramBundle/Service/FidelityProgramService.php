@@ -26,6 +26,9 @@ class FidelityProgramService
 
     public function addPoints(Customer $customer, $value)
     {
+        //To test into FidelityProgramServiceTest.php, if the method is called 
+        // throw new \Exception('Entrou!');
+
         $this->logger->log('Checking points for customer');
         $pointsToAdd = $this->pointsCalculator->calculatePointsToReceive($value);
 
