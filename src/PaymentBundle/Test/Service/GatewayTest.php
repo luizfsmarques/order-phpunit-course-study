@@ -47,7 +47,7 @@ class GatewayTest extends TestCase
     public function testShouldNotPayWhenFailOnGateway(): void 
     {
         $HttpClientInterface = $this->createMock(HttpClientInterface::class);
-        $LoggerInterface = $this->createStub(LoggerInterface::class);
+        $LoggerInterface = $this->createMock(LoggerInterface::class);
         $user = 'test';
         $password = 'valid-password';
         $Gateway = new Gateway($HttpClientInterface,$LoggerInterface,$user,$password);
@@ -83,7 +83,9 @@ class GatewayTest extends TestCase
         $HttpClientInterface->expects($this->atLeast(2))->method('send')->willReturnMap($map);
         $paid = $Gateway->pay($name,$creditCardNumber,$validity,$value);
 
-        $this->assertEquals(false,$paid);
+        $LoggerInterface->expects($this->once())->method('log')->with('Payment failed');
+
+        $this->assertEquals(false,$paid,'Is supposed to receive a false value.');
 
     }
 
@@ -126,7 +128,7 @@ class GatewayTest extends TestCase
         $HttpClientInterface->expects($this->atLeast(2))->method('send')->willReturnMap($map);
         $paid = $Gateway->pay($name,$creditCardNumber,$validity,$value);
 
-        $this->assertEquals(true,$paid);
+        $this->assertEquals(true,$paid,"Is supposed to receive a true value."."blablabalba");
 
     }
 
