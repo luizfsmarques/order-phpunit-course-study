@@ -40,7 +40,7 @@ class OrderServiceTest extends TestCase
 
     }
 
-    public function testShouldNotProcessWhenCustomeNotAllowed(): void
+    public function testShouldNotProcessWhenCustomerNotAllowed(): void
     {
         $OrderService = new OrderService(
             $this->BadWordsValidator,
@@ -61,6 +61,31 @@ class OrderServiceTest extends TestCase
         );
     }
 
+    public function testShouldNotProcessWhenItemIsNotAvailable(): void
+    {
+        $OrderService = new OrderService(
+            $this->BadWordsValidator,
+            $this->PaymentService,
+            $this->OrderRepository,
+            $this->FidelityProgramService
+        );
+
+        $this->Customer->method('isAllowedToOrder')->willReturn(true);
+
+        $this->Item->method('isAvailable')->willReturn(false);
+
+        $this->expectException(ItemNotAvailableException::class);
+
+        $OrderService->process(
+            $this->Customer,
+            $this->Item,
+            '',
+            $this->CreditCard
+        );
+
+    }
+
+    
 
 
     public function tearDown(): void
